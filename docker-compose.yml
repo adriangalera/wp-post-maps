@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: wp_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql  # Maps MySQL data to a local folder
+    platform: 
+      linux/amd64
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - db
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_password
+      TAR_OPTIONS: --no-same-owner
+
+    volumes:
+      - ./wordpress_data:/var/www/html  # Maps WordPress data to a local folder
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini 
+
+    ports:
+      - "8080:80"
+    platform: 
+      linux/amd64
+
+volumes:
+  mysql_data:

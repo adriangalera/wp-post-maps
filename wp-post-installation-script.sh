@@ -42,4 +42,7 @@ docker exec wordpress wp post create --allow-root --post_type=page --post_status
 # Install the advanced custom fields, so the editor can show lat,lng fields
 docker exec wordpress wp plugin install /plugins/advanced-custom-fields.zip --activate --allow-root
 
-echo "WordPress setup completed successfully! You can find the page here: http://localhost:8080/?page_id=7"
+docker exec wordpress wp option update show_on_front 'page' --allow-root
+docker exec wordpress wp option update page_on_front 7 --allow-root
+
+echo "WordPress setup completed successfully! You can find the page here: http://localhost:8080"

@@ -1,7 +1,7 @@
 start:
 	docker-compose up -d
 
-clean:
+stop:
 	docker-compose down
 	docker-compose down -v
 

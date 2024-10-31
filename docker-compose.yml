@@ -1,29 +1,37 @@
 services:
   db:
     image: mysql:5.7
+    container_name: wordpress-db
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wp_user
       MYSQL_PASSWORD: wp_password
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
-      - mysql_data:/var/lib/mysql  # Maps MySQL data to a local folder
+      - mysql_data:/var/lib/mysql
     platform: 
       linux/amd64
+    healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 5s
+        retries: 10
 
   wordpress:
     image: wordpress:latest
+    container_name: wordpress
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wp_user
       WORDPRESS_DB_PASSWORD: wp_password
-      TAR_OPTIONS: --no-same-owner
+      TAR_OPTIONS: --no-same-owner 
     volumes:
-      - ./wordpress_data:/var/www/html  # Maps WordPress data to a local folder
-      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini 
+      - wp:/var/www/html
+      - ./plugins:/plugins
+      - ./custom-functions:/custom-functions
 
     ports:
       - "8080:80"
@@ -32,3 +40,4 @@ services:
 
 volumes:
   mysql_data:
+  wp:

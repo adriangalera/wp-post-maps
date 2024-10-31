@@ -21,7 +21,6 @@ services:
       WORDPRESS_DB_USER: wp_user
       WORDPRESS_DB_PASSWORD: wp_password
       TAR_OPTIONS: --no-same-owner
-
     volumes:
       - ./wordpress_data:/var/www/html  # Maps WordPress data to a local folder
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini 
